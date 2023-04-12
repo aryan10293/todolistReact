@@ -1,5 +1,24 @@
+import React from "react"
 import { Fragment } from "react"
+import RenderList from "./RenderList"
 function TodoList() {
+    const task = React.useRef()
+    let [newTodo, setNewTodo] = React.useState({
+        task: ''
+    })
+    const handleChange = event => {
+        setNewTodo({task: event.target.value})
+    }
+    const handleClick = async (e) => {
+        e.preventDefault()
+        await fetch('http://localhost:2010/postTodosApi', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(newTodo)
+        })
+        setNewTodo({task: ''})
+    }
+
   return (
       <>
         <div className="h-100 w-full flex items-center justify-center bg-teal-lightest font-sans">
@@ -7,21 +26,12 @@ function TodoList() {
                     <div className="mb-4">
                         <h1 className="text-grey-darkest">Todo List</h1>
                         <div className="flex mt-4">
-                            <input className="shadow appearance-none border rounded w-full py-2 px-3 mr-4 text-grey-darker" placeholder="Add Todo"/>
-                            <button className="flex-no-shrink p-2 border-2 rounded text-teal border-teal hover:text-white hover:bg-teal">Add</button>
+                            <input ref={task} className="shadow appearance-none border rounded w-full py-2 px-3 mr-4 text-grey-darker" name='todo' value={newTodo.task} onChange={handleChange}placeholder="Add Todo"/>
+                            <input className="flex-no-shrink p-2 border-2 rounded text-teal border-teal hover:text-white hover:bg-teal" type="submit" onClick={handleClick} value='Add Task'/>
                         </div>
                     </div>
                     <div>
-                        <div className="flex mb-4 items-center">
-                            <p className="w-full text-grey-darkest">Add another component to Tailwind Components</p>
-                            <button className="flex-no-shrink p-2 ml-4 mr-2 border-2 rounded hover:text-white text-green border-green hover:bg-green">Done</button>
-                            <button className="flex-no-shrink p-2 ml-2 border-2 rounded text-red border-red hover:text-white hover:bg-red">Remove</button>
-                        </div>
-                        <div className="flex mb-4 items-center">
-                            <p className="w-full line-through text-green">Submit Todo App Component to Tailwind Components</p>
-                            <button className="flex-no-shrink p-2 ml-4 mr-2 border-2 rounded hover:text-white text-grey border-grey hover:bg-grey">Not Done</button>
-                            <button className="flex-no-shrink p-2 ml-2 border-2 rounded text-red border-red hover:text-white hover:bg-red">Remove</button>
-                        </div>
+                    <RenderList />
                     </div>
                 </div>
             </div>
@@ -31,3 +41,14 @@ function TodoList() {
 }
 
 export default TodoList
+
+                        // <div className="flex mb-4 items-center">
+                        //     <p className="w-full text-grey-darkest">Add another component to Tailwind Components</p>
+                        //     <button className="flex-no-shrink p-2 ml-4 mr-2 border-2 rounded hover:text-white text-green border-green hover:bg-green">Done</button>
+                        //     <button className="flex-no-shrink p-2 ml-2 border-2 rounded text-red border-red hover:text-white hover:bg-red">Remove</button>
+                        // </div>
+                        // <div className="flex mb-4 items-center">
+                        //     <p className="w-full line-through text-green">Submit Todo App Component to Tailwind Components</p>
+                        //     <button className="flex-no-shrink p-2 ml-4 mr-2 border-2 rounded hover:text-white text-grey border-grey hover:bg-grey">Not Done</button>
+                        //     <button className="flex-no-shrink p-2 ml-2 border-2 rounded text-red border-red hover:text-white hover:bg-red">Remove</button>
+                        // </div>
