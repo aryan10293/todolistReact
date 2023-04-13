@@ -1,11 +1,17 @@
 import React from "react"
 import { Fragment } from "react"
-import RenderList from "./RenderList"
 function TodoList() {
     const task = React.useRef()
+    const [todos, setTodos] = React.useState([])
     let [newTodo, setNewTodo] = React.useState({
         task: ''
     })
+    React.useEffect(() => {
+    function thisIsWhatStackOverFlowSaidTodo(){
+        renderTodos()
+    }
+        thisIsWhatStackOverFlowSaidTodo()
+    }, [])
     const handleChange = event => {
         setNewTodo({task: event.target.value})
     }
@@ -17,6 +23,26 @@ function TodoList() {
             body: JSON.stringify(newTodo)
         })
         setNewTodo({task: ''})
+        renderTodos()
+    }
+
+        const renderTodos = async _ => {
+        let lol = await fetch('http://localhost:2010/getTodosApi')
+        const data = await lol.json()
+        setTodos(data)
+    }
+
+    const List = (props) => {
+        const classStyle = props.classStyle
+        const task = props.task
+        const done = props.done
+        return (
+            <div className="flex mb-4 items-center">
+                 <p className={`${classStyle} w-full text-grey-darkest`}>{task}</p>
+                <button className="flex-no-shrink p-2 ml-4 mr-2 border-2 rounded hover:text-white text-grey border-grey hover:bg-grey">{done}</button>
+                <button className="flex-no-shrink p-2 ml-2 border-2 rounded text-red border-red hover:text-white hover:bg-red">Remove</button>
+            </div>
+        )
     }
 
   return (
@@ -31,7 +57,17 @@ function TodoList() {
                         </div>
                     </div>
                     <div>
-                    <RenderList />
+                        {
+                            todos.map(x => {
+                            return (
+                                <div key={x._id} className="flex mb-4 items-center">
+                                    {
+                                        x.completed ? <List task={x.task} classStyle='line-through' done='not done'/> : <List task={x.task}  done='done'/>
+                                    }
+                                </div>
+                            )
+                            })
+                        }
                     </div>
                 </div>
             </div>
@@ -44,11 +80,6 @@ export default TodoList
 
                         // <div className="flex mb-4 items-center">
                         //     <p className="w-full text-grey-darkest">Add another component to Tailwind Components</p>
-                        //     <button className="flex-no-shrink p-2 ml-4 mr-2 border-2 rounded hover:text-white text-green border-green hover:bg-green">Done</button>
-                        //     <button className="flex-no-shrink p-2 ml-2 border-2 rounded text-red border-red hover:text-white hover:bg-red">Remove</button>
-                        // </div>
-                        // <div className="flex mb-4 items-center">
-                        //     <p className="w-full line-through text-green">Submit Todo App Component to Tailwind Components</p>
-                        //     <button className="flex-no-shrink p-2 ml-4 mr-2 border-2 rounded hover:text-white text-grey border-grey hover:bg-grey">Not Done</button>
-                        //     <button className="flex-no-shrink p-2 ml-2 border-2 rounded text-red border-red hover:text-white hover:bg-red">Remove</button>
+                            // <button className="flex-no-shrink p-2 ml-4 mr-2 border-2 rounded hover:text-white text-green border-green hover:bg-green">Done</button>
+                            // <button className="flex-no-shrink p-2 ml-2 border-2 rounded text-red border-red hover:text-white hover:bg-red">Remove</button>
                         // </div>
