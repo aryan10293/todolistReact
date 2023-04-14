@@ -24,5 +24,12 @@ module.exports = {
         todo.save();
 
         res.json(todo);
-    }
+    },
+    deleteTodo: async = async (req,res) => {
+        const todo = await Todo.findOneAndRemove(req.params.id);
+
+        const getTodos = await Todo.find()
+
+        res.status(200).json(getTodos)
+    },
 }
