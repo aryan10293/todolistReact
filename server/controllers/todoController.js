@@ -15,5 +15,14 @@ module.exports = {
 
       res.json(todo);
 
+    },
+    checkTodo: async = async (req,res) => {
+      	const todo = await Todo.findById(req.params.id);
+
+        todo.completed = !todo.completed;
+
+        todo.save();
+
+        res.json(todo);
     }
 }

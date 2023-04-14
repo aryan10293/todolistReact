@@ -31,20 +31,53 @@ function TodoList() {
         const data = await lol.json()
         setTodos(data)
     }
+    // const handleClickCompleted = async id => {
+    //     const checkCompleted = await fetch(`http://localhost:2010/editTodosApi/${id}`)
+    //     const data = checkCompleted.json()
+    //     todos.map(x => {
+    //         if(x._id === data._id){
+    //             x.completed = data.completed
+    //             return x
+    //         } else {
+    //             return x
+    //         }
+    //     })
+    // }
 
     const List = (props) => {
         const classStyle = props.classStyle
         const task = props.task
         const done = props.done
+        const id = props.id
         return (
             <div className="flex mb-4 items-center">
                  <p className={`${classStyle} w-full text-grey-darkest`}>{task}</p>
-                <button className="flex-no-shrink p-2 ml-4 mr-2 border-2 rounded hover:text-white text-grey border-grey hover:bg-grey">{done}</button>
-                <button className="flex-no-shrink p-2 ml-2 border-2 rounded text-red border-red hover:text-white hover:bg-red">Remove</button>
+
+                <button onClick={async () => {
+                    const checkCompleted = await fetch(`http://localhost:2010/editTodosApi/${id}`)
+                    const data = checkCompleted.json()
+                    todos.map(x => {
+                        if(x._id === data._id){
+                            x.completed = data.completed
+                            return x
+                        } else {
+                            return x
+                        }
+                    })
+                    renderTodos()
+                }} 
+                className="flex-no-shrink p-2 ml-4 mr-2 border-2 rounded hover:text-white text-grey border-grey hover:bg-grey"
+                >{done}
+                </button>
+
+                <button 
+                className="flex-no-shrink p-2 ml-2 border-2 rounded text-red border-red hover:text-white hover:bg-red"
+                >Remove
+                </button>
+
             </div>
         )
     }
-
   return (
       <>
         <div className="h-100 w-full flex items-center justify-center bg-teal-lightest font-sans">
@@ -62,7 +95,7 @@ function TodoList() {
                             return (
                                 <div key={x._id} className="flex mb-4 items-center">
                                     {
-                                        x.completed ? <List task={x.task} classStyle='line-through' done='not done'/> : <List task={x.task}  done='done'/>
+                                        x.completed ? <List task={x.task} classStyle='line-through' done='not done' id={x._id}/> : <List id={x._id} task={x.task}  done='done'/>
                                     }
                                 </div>
                             )
